@@ -188,11 +188,11 @@ sum(is.na(Base_2018))
 summary(Base_2018)
 
 #
-#  	SeparaciÃ³n tablas
+#  	Separacion tablas
 #
 
-##Base_AUX <- Base_2018 ///////// Respaldo de la Base_2018 post mice. En caso de que haya problemas mÃ¡s adelante
-##Base_2018 <- Base_AUX ###///USAR EN CASO DE ERROR MÃS ADELANTE
+##Base_AUX <- Base_2018 ///////// Respaldo de la Base_2018 post mice. En caso de que haya problemas mas adelante
+##Base_2018 <- Base_AUX ###///USAR EN CASO DE ERROR MAS ADELANTE
 
 
 
@@ -207,7 +207,7 @@ Base_2018$SIN_FEC_DENUNCIA <- as.Date(Base_2018$SIN_FEC_DENUNCIA / 60 / 60 / 24,
 
 
 #Separar fechas (class = Date) y omitir las horas
-#*En caso de que todos estÃ©n de acuerdo en solo dejar la fecha
+#*En caso de que todos estan de acuerdo en solo dejar la fecha
 Base_2018$Fecha_Recepcion <- ymd(Base_2018$Fecha_Recepcion)
 Base_2018$SIN_FECHA_OCURRENCIA <- ymd(Base_2018$SIN_FECHA_OCURRENCIA)
 Base_2018$SIN_FEC_DENUNCIA <- ymd(Base_2018$SIN_FEC_DENUNCIA)
@@ -216,14 +216,14 @@ Base_2018$SIN_FEC_INIC_VIG_SINIESTRADO <- ymd(Base_2018$SIN_FEC_INIC_VIG_SINIEST
 Base_2018$Fecha_HEV <- ymd(Base_2018$Fecha_HEV)
 #Base_2018$HEV_TIME_MARK <- ymd(as.Date(Base_2018$HEV_TIME_MARK))
 
-##Â¿Mantenemos la separaciÃ³n con horas o solo aÃ±o, mes y dÃ­a?
+##¿Mantenemos la separacion con horas o solo ano, mes y dia?
 
 
 #Correccion tildes SIN_ESTADO_ACTUAL
 Base_2018$SIN_ESTADO_ACTUAL[Base_2018$SIN_ESTADO_ACTUAL=="En EvaluaciÂ¿n"]<-"En Evaluacion"
 
 #
-#  	CreaciÃ³n de binarias
+#  	Creacion de binarias
 #
 
 #Transformar CLASE a binaria
@@ -247,14 +247,14 @@ Base_2018$LE_BIN = ifelse(Base_2018$LOT_EXTERNO == 'N', 0, 1)
 #Clase_bin <- Base_2018$Clase_bin
 
 
-#Se separÃ³ la variable CAU_DESCRIPCION en 6 partes, CAUSA_Despido, CAUSA_Robo, CAUSA_Enfermedad, CAUSA_ClonaciÃ³n, CAUSA_Incendio y CAUSA_Otros.
-#CAUSA_Despido, CAUSA_Robo, CAUSA_Enfermedad, CAUSA_ClonaciÃ³n se generaron ya que a partir de la muestra existente en Base_2018 se determinÃ³ que estas son las 4 causas con mayor incidencias en 'POSIBLE FRAUDE'.
+#Se separÃ³ la variable CAU_DESCRIPCION en 6 partes, CAUSA_Despido, CAUSA_Robo, CAUSA_Enfermedad, CAUSA_Clonacion, CAUSA_Incendio y CAUSA_Otros.
+#CAUSA_Despido, CAUSA_Robo, CAUSA_Enfermedad, CAUSA_Clonacion se generaron ya que a partir de la muestra existente en Base_2018 se determina que estas son las 4 causas con mayor incidencias en 'POSIBLE FRAUDE'.
 #Separando solo los casos de 'POSIBLE FRAUDE' (7.885 casos), se encontrÃ³ que la participaciÃ³n de las causas anteriormente mencionadas respecto al universo de 7.885 casos es la siguiente:
 #Despido: 76,94%
 #Robo: 2,4%
 #Enfermedad + Enfermedades Graves: 15,39%
-#ClonaciÃ³n: 1,47%
-#AdemÃ¡s se tomÃ³ la variable Incendio como causa separada, ya que si bien no represente un porcentaje importante de los casos de 'POSIBLE FRAUDE' de la base sobre la que se trabaja, en el Manual Antifraude de la compaÃ±Ã­a Caledonia Seguros se menciona como una causa importante de fraudes.
+#Clonacion: 1,47%
+#Ademas se toma la variable Incendio como causa separada, ya que si bien no represente un porcentaje importante de los casos de 'POSIBLE FRAUDE' de la base sobre la que se trabaja, en el Manual Antifraude de la compaÃ±Ã­a Caledonia Seguros se menciona como una causa importante de fraudes.
 #El resto de las causas de fraudes fueron agrupadas en CAUSA_Otros.
 
 
@@ -294,18 +294,18 @@ Base_2018$DEN_ASEG_BIN = ifelse(Base_2018$DNI_ASEGURADO_LLAVE == Base_2018$DNI_D
 #Calculamos la edad de las personas al momento de ocurrido el siniestro.
 Base_2018$Edad_Siniestro <- year(ymd(Base_2018$SIN_FECHA_OCURRENCIA))-year(Base_2018$FECHA_NACIMIENTO)
 
-#Creamos una funciÃ³n para corregir el posible error operativo, donde la fecha de ocurrencia del siniestro es anterior a la fecha de
-#contrataciÃ³n del seguro. En este caso, se asumirÃ¡ que si la fecha de ocurrencia es anterior a la contracaciÃ³n, la fecha
-#de ocurrencia serÃ¡ igual a la de contrataciÃ³n.
+#Creamos una funcion para corregir el posible error operativo, donde la fecha de ocurrencia del siniestro es anterior a la fecha de
+#contratacion del seguro. En este caso, se asumirÃ¡ que si la fecha de ocurrencia es anterior a la contratacion, la fecha
+#de ocurrencia sera igual a la de contratacion.
 
 Base_2018$SIN_FECHA_OCURRENCIA <- ifelse(Base_2018$SIN_FECHA_OCURRENCIA < Base_2018$SIN_FEC_INIC_VIG_SINIESTRADO, Base_2018$SIN_FEC_INIC_VIG_SINIESTRADO, Base_2018$SIN_FECHA_OCURRENCIA)
 
 
-###Generamos una Base_AUX_2 como respaldo hasta este punto en caso de tener problemas mÃ¡s adelante.
-###Base_AUX_2 <- Base_2018 ### /// APLICAR EN CASO DE ERRORES MÃS ADELANTE
+###Generamos una Base_AUX_2 como respaldo hasta este punto en caso de tener problemas mas adelante.
+###Base_AUX_2 <- Base_2018 ### /// APLICAR EN CASO DE ERRORES MaS ADELANTE
 
 ############################################
-####      Valores BB.DD. HistÃ³rica	    ####
+####      Valores BB.DD. Historica	    ####
 ############################################
 
 ###############MONTO_POR_DNI###############
@@ -339,7 +339,7 @@ Base_H <- Base_H[!is.na(Base_H$DNI_ASEGURADO_LLAVE),]
 
 N_POLIZAS_DNI <- Base_H %>% #Llamamos la base
   group_by(DNI_ASEGURADO_LLAVE) %>% #Agrupamos por DNI
-  tally() #tally() cuenta cuÃ¡ntos elementos hay en cada grupo
+  tally() #tally() cuenta cuantos elementos hay en cada grupo
 
 names(N_POLIZAS_DNI) = c("DNI_ASEGURADO_LLAVE", "conteoPolizas") #Renombramos las columnas
 
@@ -353,14 +353,14 @@ Base_H <- Base_H[!is.na(Base_H$DNI_ASEGURADO_LLAVE),]
 
 N_SINIESTROS_DNI <- Base_H %>% #Llamamos la base
   group_by(DNI_ASEGURADO_LLAVE) %>% #Agrupamos por DNI
-  tally() #tally() cuenta cuÃ¡ntos elementos hay en cada grupo
+  tally() #tally() cuenta cuantos elementos hay en cada grupo
 
 names(N_SINIESTROS_DNI) = c("DNI_ASEGURADO_LLAVE", "conteoSiniestros") #Renombramos las columnas
 
 #Creamos un vector con los DNI de BASE_2018 // Con este vector tenemos la lista de DNIs completa
 Lista_DNI <- c(Base_2018$DNI_ASEGURADO_LLAVE)
 
-#Reducimos el nÃºmero de obs. en N_SINIESTROS_DNI, eliminando todos los DNI que no estÃ¡n en Base_2018
+#Reducimos el numero de obs. en N_SINIESTROS_DNI, eliminando todos los DNI que no estan en Base_2018
 Numero_Siniestros <- N_SINIESTROS_DNI %>%
   filter(N_SINIESTROS_DNI$DNI_ASEGURADO_LLAVE %in% Lista_DNI)
 #Reducimos el nÃºmero de obs. en MONTO_POR_DNII, eliminando todos los DNI que no estÃ¡n en Base_2018
@@ -370,8 +370,8 @@ Montos_Totales <- MONTO_POR_DNI %>%
 Numero_Polizas <- N_POLIZAS_DNI %>%
   filter(N_POLIZAS_DNI$DNI_ASEGURADO_LLAVE %in% Lista_DNI)
 
-#Los 3 Data Frames quedaron con menos de 30.000 observaciones, con lo que se asume que los DNIs que no estÃ¡n en los nuevos Data Frames, 
-#son personas que NO TIENEN registros histÃ³ricos. Es decir, no han contratado un seguro antes, al menos no que estÃ© en dicho registro.
+#Los 3 Data Frames quedaron con menos de 30.000 observaciones, con lo que se asume que los DNIs que no estan en los nuevos Data Frames, 
+#son personas que NO TIENEN registros historicos. Es decir, no han contratado un seguro antes, al menos no que estan en dicho registro.
 
 #Con la funciÃ³n "merge" generamos un left join, donde usamos la Base_2018 como base y cruzamos los datos con las otras bases generadas, lo
 #cual nos devuelve el valor asociado a DNI_ASEGURADO_LLAVE por ejemplo, creando una nueva columna e ingresando el valor en caso de existir.
@@ -401,16 +401,16 @@ Base_2018$conteoSiniestros[is.na(Base_2018$conteoSiniestros)] <- 0
 Base_2018$sumaDeMontos[is.na(Base_2018$sumaDeMontos)] <- 0
 Base_2018$conteoDenuncias[is.na(Base_2018$conteoDenuncias)] <- 0
 
-###Dejamos guardada la Base_AUX_3 en caso de problemas mÃ¡s adelante.
-Base_AUX_3 <- Base_2018 ###/// USAR EN CASO DE TENER ERRORES MÃS ADELANTE
+###Dejamos guardada la Base_AUX_3 en caso de problemas mas adelante.
+Base_AUX_3 <- Base_2018 ###/// USAR EN CASO DE TENER ERRORES MAS ADELANTE
 ###Base_2018 <- Base_AUX_3 ##//Activar en caso de emergencia
 
-####################EliminaciÃ³n de observaciones pre procedo de DATA MINING####################
+####################Eliminacion de observaciones pre procedo de DATA MINING####################
 
 #Eliminamos las observaciones que cumplan con (Edad < 18 y DNI_ASEGURADO = DNI_DENUNCIANTE_LLAVE). Esto debido a que ningÃºn menor de edad en
 #Chile estÃ¡ habilitado para hacer cobros o hacer efectivos los seguros. En esos casos debe ser su tutor legal quien haga efectivo el seguro.
 #Como no podemos saber si DNI_DENUNCIANTE_LLAVE  en los casos en que DNI_ASEGURADO != DNI_DENUNCIANTE_LLAVE es alguien mayor de edad, se asumirÃ¡ que
-#dicha persona si estÃ¡ posibilitada a hacer efectivo el seguro.
+#dicha persona si esta posibilitada a hacer efectivo el seguro.
 
 
 Base_2018$Edad_Siniestro <- ifelse(Base_2018$Edad_Siniestro < 18 & Base_2018$DEN_ASEG_BIN == 1, NA,Base_2018$Edad_Siniestro)
@@ -420,14 +420,14 @@ Base_2018$Edad_Siniestro <- ifelse(Base_2018$Edad_Siniestro < 18 & Base_2018$DEN
 Base_2018 <- Base_2018[!is.na(Base_2018$Edad_Siniestro),]
 
 
-#Procedemos a eliminar tambiÃ©n las personas >100 aÃ±os de la base. Este grupo etario es muy poco frecuente en Chile, ademÃ¡s de existir en la base
-#personas que incluso superan a la persona mÃ¡s longeva de Chile en toda su historia, por ende, se procede a eliminar dichos registros:
+#Procedemos a eliminar tambiÃ©n las personas >100 aÃ±os de la base. Este grupo etario es muy poco frecuente en Chile, ademas de existir en la base
+#personas que incluso superan a la persona mas longeva de Chile en toda su historia, por ende, se procede a eliminar dichos registros:
 
 Base_2018$Edad_Siniestro <- ifelse(Base_2018$Edad_Siniestro > 100, NA,Base_2018$Edad_Siniestro)
 
 Base_2018 <- Base_2018[!is.na(Base_2018$Edad_Siniestro),]
 
-#Procedemos tambiÃ©n a eliminar a las personas no nacidas, o con edad < 0 aÃ±os, ya que es imposible que una persona que aÃºn no nace participe de un siniestro.
+#Procedemos tambien a eliminar a las personas no nacidas, o con edad < 0 anos, ya que es imposible que una persona que aun no nace participe de un siniestro.
 
 Base_2018$Edad_Siniestro <- ifelse(Base_2018$Edad_Siniestro < 0, NA,Base_2018$Edad_Siniestro)
 
@@ -436,8 +436,8 @@ Base_2018 <- Base_2018[!is.na(Base_2018$Edad_Siniestro),]
 
 apply(Base_2018, 2, pMiss)
 
-###Dejamos guardada la Base_AUX_4 en caso de problemas mÃ¡s adelante.
-###Base_AUX_4 <- Base_2018 ###/// USAR EN CASO DE TENER ERRORES MÃS ADELANTE
+###Dejamos guardada la Base_AUX_4 en caso de problemas mas adelante.
+###Base_AUX_4 <- Base_2018 ###/// USAR EN CASO DE TENER ERRORES MAS ADELANTE
 
 
 ############################################
@@ -447,13 +447,13 @@ apply(Base_2018, 2, pMiss)
 #install.packages("ROSE")
 library(ROSE)
 
-table(Base_2018$CLASE) #Vemos la proporciÃ³n en la base entre NO y POSIBLE FRAUDE
-#80054 NO y 7833 POSIBLE FRAUDE. Es decir, un 8,91% de POSIBLE FRAUDE, lo que nos da una entropÃ­a en torno al 43,6%
+table(Base_2018$CLASE) #Vemos la proporcion en la base entre NO y POSIBLE FRAUDE
+#80054 NO y 7833 POSIBLE FRAUDE. Es decir, un 8,91% de POSIBLE FRAUDE, lo que nos da una entropia en torno al 43,6%
 
 #Queremos reducir la muestra total a una cantidad trabajable por nuestros computadores, lo cual estÃ¡ en torno a las 30.000 observaciones.
-#AdemÃ¡s queremos disminuir un poco la brecha en la proporciÃ³n de las clases para aumentar el Information Gain a pesar de aumentar la entropÃ­a existente.
+#Ademas queremos disminuir un poco la brecha en la proporcion de las clases para aumentar el Information Gain a pesar de aumentar la entropÃ­a existente.
 #Consideramos que es oportuno intentar llevar los POSIBLE FRAUDE a un 30% de la muestra total con la que trabajaremos, ya que si aumentamos
-#mÃ¡s existe el riesgo de sobre ajuste del modelo y un aumento desmedido de entropÃ­a.
+#mas existe el riesgo de sobre ajuste del modelo y un aumento desmedido de entropia.
 
 #Primero vamos a hacer un undersampling para balancear la Base_2018:
 
@@ -469,9 +469,9 @@ table(Base_balance$CLASE)
 #Cargamos la Base_Prediccion (Requerida)
 Base_Prediccion <- read_excel("Tarea_2019S2_PrediccionRequerida.xlsx",col_names = TRUE)
 
-#La Base_Prediccion tiene 142 NULLs en CUOTAS_PAG y 142 NULLs en MONTO_APROVADO. AdemÃ¡s de 300 NULLs en ID_AVISO.
+#La Base_Prediccion tiene 142 NULLs en CUOTAS_PAG y 142 NULLs en MONTO_APROVADO. Ademas de 300 NULLs en ID_AVISO.
 
-#Para unir las 2 bases, ambas deben tener las mismas variables, por lo que se procede a la modificaciÃ³n de Base_Prediccion
+#Para unir las 2 bases, ambas deben tener las mismas variables, por lo que se procede a la modificacion de Base_Prediccion
 
 
 ##############################################################################################################
@@ -520,8 +520,8 @@ Base_Prediccion <- merge(x = Base_Prediccion, y = Numero_Siniestros, by = "DNI_A
 Base_Prediccion <- merge(x = Base_Prediccion, y = Montos_Totales, by = "DNI_ASEGURADO_LLAVE", all.x = TRUE)
 
 
-#Ahora TODOS los NA que quedaron en las nuevas columnas se deben igualar a 0, ya que como se mencionÃ³ mÃ¡s arriba, esto significa que estas
-#personas no tienen registros histÃ³ricos.
+#Ahora TODOS los NA que quedaron en las nuevas columnas se deben igualar a 0, ya que como se menciona mas arriba, esto significa que estas
+#personas no tienen registros historicos.
 Base_Prediccion$conteoPolizas[is.na(Base_Prediccion$conteoPolizas)] <- 0
 Base_Prediccion$conteoSiniestros[is.na(Base_Prediccion$conteoSiniestros)] <- 0
 Base_Prediccion$sumaDeMontos[is.na(Base_Prediccion$sumaDeMontos)] <- 0
@@ -532,7 +532,7 @@ summary(Base_Prediccion)
 
 
 ###########################Guardamos la Base_Prediccion ante cualquier eventualidad############################//AUXILIAR
-#########Base_AUX_Prediccion <- Base_Prediccion  ###/// USAR EN CASO DE TENER ERRORES MÃS ADELANTE
+#########Base_AUX_Prediccion <- Base_Prediccion  ###/// USAR EN CASO DE TENER ERRORES MAS ADELANTE
 
 #Seleccionamos las variables a utilizar de ambas bases, las cuales deben ser las mismas (variables).
 
@@ -578,7 +578,7 @@ Full_Mice <- Base_Full %>%
   select(CAUSA_Despido, CAUSA_Robo, CAUSA_Enfermedad, CAUSA_Incendio, CAUSA_Otros, SPE_BIN, LE_BIN, SIN_CUOTAS_COBERTURA, SIN_NOMBRE_CIUDAD, CUOTAS_PAG, MONTO_APROBADO)
 summary(Full_Mice)
 
-#Convertimos en Factor y Numeric los valores que asÃ­ lo requieren
+#Convertimos en Factor y Numeric los valores que asi lo requieren
 Full_Mice$SIN_NOMBRE_CIUDAD <- as.factor(Full_Mice$SIN_NOMBRE_CIUDAD)
 Full_Mice$CUOTAS_PAG <- as.numeric(Full_Mice$CUOTAS_PAG)
 Full_Mice$MONTO_APROBADO <- as.numeric(Full_Mice$MONTO_APROBADO)
@@ -604,8 +604,8 @@ summary(Base_Full)
 #########Base_AUX_PostMice <- Base_Full ##///Base completa sin NA ni la variable CLASE.
 ##Base_Full <- Base_AUX_PostMice ## // ACTIVAR EN CASO DE EMERGENCIA
 CLASE <- Clases_Full
-#Antes de aplicar los cambios en la Base nuevamente, tenemos que volver a agregar la lista de CLASE, ya que  la funciÃ³n "merge" alterarÃ¡ el orden de las observaciones.
-Posicion <- c(1:30300) #La funciÃ³n mergen agrega algunos valores (7 en total), por lo que con la columna PosiciÃ³n sabremos cuales duplica y/o agrega.
+#Antes de aplicar los cambios en la Base nuevamente, tenemos que volver a agregar la lista de CLASE, ya que  la funcion "merge" alterara el orden de las observaciones.
+Posicion <- c(1:30300) #La funcion mergen agrega algunos valores (7 en total), por lo que con la columna Posicion sabremos cuales duplica y/o agrega.
 Base_Full <- cbind(Base_Full, CLASE, Posicion)
 
 
@@ -614,7 +614,7 @@ Base_Full <- cbind(Base_Full, CLASE, Posicion)
 Base_Full$SIN_NOMBRE_CIUDAD <- as.character(Base_Full$SIN_NOMBRE_CIUDAD)
 Base_Full <- merge(x = Base_Full, y = Base_Ciudades, by = "SIN_NOMBRE_CIUDAD", all.x = TRUE)
 
-#Vemos que valor duplicÃ³:
+#Vemos que valor duplica:
 n_occur <- data.frame(table(Base_Full$Posicion))
 #Eliminamos los 7 valores que se duplicaron y la base queda tal como deberÃ­a estar:
 Base_Full<- Base_Full[!duplicated(Base_Full$Posicion), ]
@@ -635,14 +635,14 @@ Base_Full_Preproces <- Base_Full %>%
 
 
 
-#Se quita SIN_PAGO_ESPECIAL ya que su efecto estÃ¡ capturado en SPE_BIN
+#Se quita SIN_PAGO_ESPECIAL ya que su efecto esta capturado en SPE_BIN
 
 ##############################################################################################################
 ############################################## NORMALIZACIÃN #################################################
 ##############################################################################################################
 summary(Base_Full_Preproces)
 library(lattice)
-#Creamos una funciÃ³n para escalar variables numÃ©ricas y la guardamos con el nombre de "scalling"
+#Creamos una funcion para escalar variables numericas y la guardamos con el nombre de "scalling"
 scalling <- function(x){(x-min(x))/(max(x)-min(x))}
 
 Base_Full_Preproces$SIN_CUOTAS_COBERTURA <- scalling(Base_Full_Preproces$SIN_CUOTAS_COBERTURA)
@@ -699,11 +699,11 @@ correlacion1<-Base_Full_ml_train %>%
 #Base_Full_ml_test corresponde a los datos de la Base_Prediccion
 #
 
-##En esta parte procedemos a realizar un anÃ¡lisis por correralaciÃ³n entre las variables numÃ©ricas, con foco en Clase_bin
+##En esta parte procedemos a realizar un anÃ¡lisis por correralacion entre las variables numÃ©ricas, con foco en Clase_bin
 
 
-###FILTRO POR CORRELACIÃN
-#Filtramos las variables que tiengan una correlaciÃ³n menor a 0.05 (en valor absoluto).
+###FILTRO POR CORRELACION
+#Filtramos las variables que tiengan una correlacion menor a 0.05 (en valor absoluto).
 correlacion2<-correlacion1 %>% 
   filter(Clase_bin >=0.05 | Clase_bin <=-0.05 )
 #AcÃ¡ estamos diciendo que filtre: >=0.05 O <0.05 CUALQUIREA QUE CUMPLA UNA DE ESAS CONDICIONES SE QUEDA
@@ -717,7 +717,7 @@ Variables_correlacion <- c()
 for ( i in 1:nrow(correlacion2)){
   Variables_correlacion <-c(correlacion2[[i]])}
 
-#Crearemos una Base con las variables filtradas por correlaciÃ³n
+#Crearemos una Base con las variables filtradas por correlacion
 Base_preml <- subset(Base_Full_ml_train, select=Variables_correlacion)
 #Agregamos la varaible no numÃ©rica a utilizar
 Base_preml$TIPO_EMPRESA_SEGURO <- Base_Full_ml_train$TIPO_EMPRESA_SEGURO
@@ -726,11 +726,11 @@ Variables_correlacion_1 <- c(Variables_correlacion, "TIPO_EMPRESA_SEGURO", "Clas
 
 Base_preml_train <- Base_Full_ml_train
 
-## Base_Full_ml_train vendrÃ­a siendo la base "Scapegoat" que pusiste en tu cÃ³digo
+## Base_Full_ml_train vendria siendo la base "Scapegoat" que pusiste en tu codigo
 
 #
-#Como se detalla en el informe, si se corrieron 2 modelos bajo el criterio de la correlaciÃ³n, pero al mostrar peores resultados que los modelos
-#con 19 variables, en el cÃ³digo solo se conservÃ³ la parte que agrega las 19 variables a Base_preml_train 
+#Como se detalla en el informe, si se corrieron 2 modelos bajo el criterio de la correlacion, pero al mostrar peores resultados que los modelos
+#con 19 variables, en el codigo solo se conservÃ³ la parte que agrega las 19 variables a Base_preml_train 
 
 
 #
@@ -855,12 +855,12 @@ prediccion_final <- predict(Best_model, Base_Full_ml_test)
 
 ##
 ##NOTA: Recordar que el orden de las filas en la Base_Full_ml_test NO ES EL MISMO que la Base_Prediccion original,
-##ya que al utilizar la funciÃ³n merge() para agregar las nuevas variables desde la Base_Historica, esta si bien 
-##NO ALTERÃ la informaciÃ³n contenida en las filas, si modificÃ³ su posiciÃ³n original.
+##ya que al utilizar la funcion merge() para agregar las nuevas variables desde la Base_Historica, esta si bien 
+##NO ALTERA la informacion contenida en las filas, si modifica su posicion original.
 ##Es decir, si se usa la columna de prediccion_final para reemplazar la variable CLASE en el Excel Tarea_2019S2_PrediccionRequerida, los valores no coincidirÃ¡n.
 ## 
 View(prediccion_final)
 
-#Exportamos la predicciÃ³n realizada
+#Exportamos la prediccion realizada
 write.csv(prediccion_final,file="prediccionCompleta.csv")
 #CSV ESTA EN LA CARPETA DONDE ESTA EL ARCHIVO DE R
